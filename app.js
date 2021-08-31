@@ -41,15 +41,12 @@ const getAllHotelData = async () => {
 
             const hotelXMLResponse = await getData(record);
 
-            if (hotelXMLResponse.status !== 200) {
-                console.log(`Couldn't get response for ${record}`);
-            } else {
-
+            if (hotelXMLResponse.status === 200 || hotelXMLResponse.status === 304) {
                 const hotelDataXML = xmlReader.parseSync(hotelXMLResponse.data);
                 const hotelsXMLQuery = xmlQuery(hotelDataXML);
 
                 const hotelContentNode = hotelsXMLQuery.find('HotelDescriptiveContent');
-                const hotelCode = hotelContentNode.attr().HotelCode;
+                const hotelCode = hotelContentNode.attr() ? hotelContentNode.attr().HotelCode : `Recheck: ${record}`;
                 const meetingRoomsNode = hotelsXMLQuery.find('MeetingRooms');
                 const allMeetingRooms = meetingRoomsNode.children();
 
@@ -68,6 +65,8 @@ const getAllHotelData = async () => {
                 })
 
                 allHotelsObjects[hotelCode] = currentMeetingRoomListFiltered;
+            } else {
+                console.log(`Couldn't get response for ${record}`);
             }
         }
 
