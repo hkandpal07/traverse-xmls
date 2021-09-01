@@ -3,6 +3,7 @@ const fs = require('fs');
 const axios = require('axios');
 const xmlReader = require('xml-reader');
 const xmlQuery = require('xml-query');
+const flattenObject = require('./flattenObject');
 
 const allHotelsObjects = {};
 
@@ -78,5 +79,6 @@ const getAllHotelData = async () => {
     }
 }
 
-getAllHotelData();
+//getAllHotelData();
 
+flattenObject('allData.json');
